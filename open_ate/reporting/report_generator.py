@@ -1,0 +1,117 @@
+import os
+import csv
+from typing import Dict, Any
+from open_ate.core.sequence import TestStatus
+
+class ReportGenerator:
+    """Generates enterprise-standard HTML & CSV compliance test reports."""
+
+    @staticmethod
+    def generate_html(report_data: Dict[str, Any], output_path: str = "test_report.html") -> str:
+        verdict = report_data["verdict"]
+        verdict_color = "#22c55e" if verdict == "PASSED" else "#ef4444"
+        bg_card = "#1e293b"
+
+        rows_html = ""
+        for i, res in enumerate(report_data["results"], 1):
+            status_badge = (
+                f"<span style='background:#15803d;color:#fff;padding:2px 8px;border-radius:4px;font-weight:bold;'>PASS</span>"
+                if res.status == TestStatus.PASSED
+                else f"<span style='background:#b91c1c;color:#fff;padding:2px 8px;border-radius:4px;font-weight:bold;'>FAIL</span>"
+            )
+            low_str = f"{res.limit.low_limit:.4f}" if res.limit and res.limit.low_limit is not None else "--"
+            high_str = f"{res.limit.high_limit:.4f}" if res.limit and res.limit.high_limit is not None else "--"
+            meas_str = f"{res.measured_value:.4f}" if res.measured_value is not None else "ERROR"
+            unit_str = res.limit.unit if res.limit else ""
+
+            rows_html += f"""
+            <tr style="border-bottom: 1px solid #334155;">
+                <td style="padding: 10px;">{i}</td>
+                <td style="padding: 10px; font-weight: 500;">{res.step_name}</td>
+                <td style="padding: 10px; font-family: monospace;">{low_str}</td>
+                <td style="padding: 10px; font-family: monospace; font-weight: bold; color: #38bdf8;">{meas_str} {unit_str}</td>
+                <td style="padding: 10px; font-family: monospace;">{high_str}</td>
+                <td style="padding: 10px; font-family: monospace;">{res.duration_seconds*1000:.1f} ms</td>
+                <td style="padding: 10px; text-align: center;">{status_badge}</td>
+            </tr>
+            """
+
+        html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ATE Test Certificate | {report_data['uut_serial']}</title>
+    <style>
+        body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 30px; }}
+        .container {{ max-width: 1050px; margin: 0 auto; background: {bg_card}; border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }}
+        .header {{ display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #334155; padding-bottom: 20px; }}
+        .verdict-box {{ font-size: 26px; font-weight: 800; padding: 10px 24px; border-radius: 8px; border: 2px solid {verdict_color}; color: {verdict_color}; text-align: center; }}
+        .meta-grid {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 25px 0; background: #0f172a; padding: 20px; border-radius: 8px; }}
+        .meta-item b {{ display: block; font-size: 11px; text-transform: uppercase; color: #94a3b8; }}
+        .meta-item span {{ font-size: 16px; font-weight: 600; color: #38bdf8; }}
+        table {{ width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }}
+        th {{ background: #0f172a; color: #94a3b8; text-transform: uppercase; font-size: 11px; padding: 12px 10px; text-align: left; }}
+        .footer {{ text-align: center; margin-top: 30px; color: #64748b; font-size: 12px; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1 style="margin: 0; font-size: 24px;">ATE AUTOMATED TEST REPORT</h1>
+                <p style="margin: 5px 0 0 0; color: #94a3b8;">System: OpenATE Test Executive v1.0.0</p>
+            </div>
+            <div class="verdict-box">{verdict}</div>
+        </div>
+
+        <div class="meta-grid">
+            <div class="meta-item"><b>UUT Serial Number</b><span>{report_data['uut_serial']}</span></div>
+            <div class="meta-item"><b>Test Sequence</b><span>{report_data['sequence_name']}</span></div>
+            <div class="meta-item"><b>Operator</b><span>{report_data['operator']}</span></div>
+            <div class="meta-item"><b>Execution Duration</b><span>{report_data['duration_sec']:.2f} seconds</span></div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Test Description</th>
+                    <th>Low Limit</th>
+                    <th>Measured Value</th>
+                    <th>High Limit</th>
+                    <th>Duration</th>
+                    <th style="text-align: center;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {rows_html}
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <p>Generated by OpenATE Framework &bull; Designed by Kiran Shivakumar &bull; Compliant with Industrial ATE Standards</p>
+        </div>
+    </div>
+</body>
+</html>
+"""
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write(html_content)
+        return output_path
+
+    @staticmethod
+    def generate_csv(report_data: Dict[str, Any], output_path: str = "test_report.csv") -> str:
+        with open(output_path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(["UUT_SERIAL", report_data["uut_serial"]])
+            writer.writerow(["SEQUENCE", report_data["sequence_name"]])
+            writer.writerow(["VERDICT", report_data["verdict"]])
+            writer.writerow(["DURATION_SEC", f"{report_data['duration_sec']:.3f}"])
+            writer.writerow([])
+            writer.writerow(["STEP_NUMBER", "STEP_NAME", "STATUS", "MEASURED", "LOW_LIMIT", "HIGH_LIMIT", "UNIT", "DURATION_SEC"])
+            for i, res in enumerate(report_data["results"], 1):
+                low = res.limit.low_limit if res.limit else ""
+                high = res.limit.high_limit if res.limit else ""
+                unit = res.limit.unit if res.limit else ""
+                writer.writerow([i, res.step_name, res.status.value, res.measured_value, low, high, unit, f"{res.duration_seconds:.4f}"])
+        return output_path

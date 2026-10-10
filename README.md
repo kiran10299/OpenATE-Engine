@@ -1,11 +1,44 @@
 # ⚙️ OpenATE — Modular Automated Test Equipment & Instrument HAL Framework
 
-[![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![Architecture](https://img.shields.io/badge/Architecture-HAL%20%7C%20Modular%20ATE-22D3EE?style=for-the-badge)](https://github.com/kiran10299/OpenATE-Engine)
-[![Testing](https://img.shields.io/badge/Quality-Pytest%20Passing-green?style=for-the-badge)](https://pytest.org)
-[![Industry](https://img.shields.io/badge/Domain-Aerospace%20%26%20Defense%20ATE-orange?style=for-the-badge)](https://github.com/kiran10299)
+<p align="left">
+  <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.9+" /></a>
+  <a href="https://pytest.org"><img src="https://img.shields.io/badge/Tests-5%2F5%20Passing-10b981?style=for-the-badge&logo=pytest&logoColor=white" alt="Pytest Passing" /></a>
+  <a href="https://github.com/kiran10299/OpenATE-Engine"><img src="https://img.shields.io/badge/Architecture-HAL%20%7C%20Multi--Vendor-38bdf8?style=for-the-badge" alt="HAL Architecture" /></a>
+  <a href="https://www.iso.org"><img src="https://img.shields.io/badge/Protocol-SCPI%20%7C%20VISA-a855f7?style=for-the-badge" alt="SCPI VISA" /></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-f59e0b?style=for-the-badge" alt="MIT License" /></a>
+</p>
 
 An open-source, production-grade **Automated Test Equipment (ATE) Execution Framework** designed for multi-channel test benches, high-speed qualification sequences, hardware abstraction, and automated compliance reporting.
+
+---
+
+## 📺 Live Execution Terminal Preview
+
+```text
+====================================================================================
+  OpenATE Test Executive | Senior Test Engineering Framework
+  Sequence : PDU_DC_DC_Converter_Full_Qualification
+  UUT S/N  : UUT-PDU-2026-9904
+====================================================================================
+
+  STATUS   | STEP NAME                     | MEASURED     | LIMIT TOLERANCE
+  ----------------------------------------------------------------------------------
+  [PASS]   | Ground_Bonding_Resistance     | 0.1798 Ohm   | >= 0.0 and <= 0.5 Ohm
+  [PASS]   | Input_Rail_Voltage_Setup      | 11.9548 V    | >= 11.8 and <= 12.2 V
+  [PASS]   | Standby_Quiescent_Current     | 19.1001 mA   | >= 5.0 and <= 35.0 mA
+  [PASS]   | Regulated_5V_Logic_Rail       | 5.0183 V     | >= 4.9 and <= 5.1 V
+  [PASS]   | Regulated_3.3V_MCU_Rail       | 3.3090 V     | >= 3.25 and <= 3.35 V
+  [PASS]   | 5V_Rail_Ripple_Noise_Vpp      | 37.3537 mV   | >= 0.0 and <= 60.0 mV
+  [PASS]   | Switching_Frequency_PWM       | 500.2436 kHz | >= 485.0 and <= 515.0 kHz
+  [PASS]   | Power_Conversion_Efficiency   | 90.5374 %    | >= 85.0 and <= 98.0 %
+  ----------------------------------------------------------------------------------
+
+  FINAL VERDICT : PASSED
+  Total Steps   : 8 (Passed: 8, Failed: 0, Errors: 0)
+  Execution Time: 0.275 seconds
+  Audit Logs    : SQLite Run ID #3 recorded | Generated 'test_report.html' & CSV
+====================================================================================
+```
 
 ---
 

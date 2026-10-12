@@ -1,6 +1,7 @@
 # ⚙️ OpenATE — Modular Automated Test Equipment & Instrument HAL Framework
 
 <p align="left">
+  <a href="https://github.com/kiran10299/OpenATE-Engine/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/kiran10299/OpenATE-Engine/ci.yml?branch=master&style=for-the-badge&logo=github-actions&logoColor=white&label=CI%20Pipeline" alt="CI Pipeline" /></a>
   <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.9+" /></a>
   <a href="https://pytest.org"><img src="https://img.shields.io/badge/Tests-5%2F5%20Passing-10b981?style=for-the-badge&logo=pytest&logoColor=white" alt="Pytest Passing" /></a>
   <a href="https://github.com/kiran10299/OpenATE-Engine"><img src="https://img.shields.io/badge/Architecture-HAL%20%7C%20Multi--Vendor-38bdf8?style=for-the-badge" alt="HAL Architecture" /></a>
